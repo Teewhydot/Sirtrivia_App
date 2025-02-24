@@ -9,9 +9,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sirteefyapps.sirtrivia.presentation.widgets.DottedDivider
 import com.sirteefyapps.sirtrivia.utils.AppColors
+
+@Preview
 
 @Composable
 fun TriviaHome(modifier: Modifier = Modifier) {
