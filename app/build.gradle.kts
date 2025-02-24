@@ -5,6 +5,7 @@ plugins {
     id("com.google.devtools.ksp")
     id ("com.google.dagger.hilt.android")
     id ("kotlin-kapt")
+
 }
 
 android {
@@ -43,10 +44,9 @@ android {
 }
 
 dependencies {
+    kapt (libs.hilt.compiler)
     // KSP
-    ksp(libs.androidx.room.compiler)
     implementation (libs.dagger.hilt.android)
-    ksp(libs.hilt.compiler)
 
     // Kotlin Coroutines
     implementation (libs.kotlinx.coroutines.core)
