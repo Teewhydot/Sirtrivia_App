@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -54,13 +55,18 @@ fun beveledCornersShape(
 
 
 @Composable
-fun TriviaButton(buttonText: String, onTap: () -> Unit,buttonColor: Color) {
-    Surface(modifier = Modifier.height(90.dp).fillMaxWidth().padding(20.dp).clickable {
+fun TriviaButton(buttonText: String,
+                 index: Int,
+                 onTap: () -> Unit,
+                 buttonColor: Color,
+                 answer:String,) {
+    Surface(modifier = Modifier.height(90.dp).fillMaxWidth(
+    ).padding(20.dp).clickable {
         onTap()
     }, shape = beveledCornersShape(
         cornerSize = 10.dp
     ), color = buttonColor) {
-      Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
           Text(
               text = buttonText,
               style = Typography.labelSmall.copy(
@@ -70,5 +76,29 @@ fun TriviaButton(buttonText: String, onTap: () -> Unit,buttonColor: Color) {
               textAlign = TextAlign.Center,
           )
       }
+    }
+}
+
+
+@Composable
+fun TriviaNavigateButton(buttonText: String, onTap: () -> Unit,buttonColor: Color) {
+
+    Surface(modifier = Modifier.height(90.dp).width(190.dp).padding(20.dp).clickable {
+        onTap()
+    }, shape = beveledCornersShape(
+        cornerSize = 10.dp
+    ), color = buttonColor) {
+
+
+        Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = buttonText,
+                style = Typography.labelSmall.copy(
+                    color = Color.White,
+                    fontSize = 15.sp
+                ),
+                textAlign = TextAlign.Center,
+            )
+        }
     }
 }

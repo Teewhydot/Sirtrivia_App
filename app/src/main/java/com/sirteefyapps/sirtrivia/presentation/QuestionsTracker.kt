@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.sp
 import com.sirteefyapps.sirtrivia.utils.AppColors
 
 @Composable
-fun QuestionsTracker(count: Int = 10, total: Int= 38489){
+fun QuestionsTracker(count: Int = 10, total: Int){
     Text(
         text = buildAnnotatedString {
             withStyle(

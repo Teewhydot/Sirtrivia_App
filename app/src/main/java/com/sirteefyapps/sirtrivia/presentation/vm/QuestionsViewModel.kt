@@ -1,7 +1,8 @@
 package com.sirteefyapps.sirtrivia.presentation.vm
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sirteefyapps.sirtrivia.DataOrException
@@ -13,14 +14,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuestionsViewModel  @Inject constructor(private  val repository: QuestionRepo) : ViewModel() {
-    private val _worldQuestions = MutableLiveData<DataOrException<Questions, Boolean, Exception>>()
-    val questions: LiveData<DataOrException<Questions, Boolean, Exception>> = _worldQuestions
-init {
-    getWorldQuestions()
-}
-    private fun getWorldQuestions(){
+    private val _questionList: MutableState<DataOrException<Questions, Boolean, Exception>> =
+        mutableStateOf(
+            DataOrException(null, false, Exception("No data"))
+        )
+    val questionList = _questionList
+    var currentQuestionIndex = mutableIntStateOf(0)
+        private set
+    init {
+        getWorldQuestions()
+    }
+
+    private fun getWorldQuestions() {
         viewModelScope.launch {
-            _worldQuestions.value = repository.getWorldQuestions()
+            _questionList.value = repository.getWorldQuestions()
         }
     }
-}
+        fun moveToNextQuestion() {
+            viewModelScope.launch {
+                currentQuestionIndex.intValue =
+                    (currentQuestionIndex.intValue + 1) % (_questionList.value.data?.size ?: 1)
+            }
+        }
+    }

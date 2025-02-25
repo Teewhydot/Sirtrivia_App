@@ -21,9 +21,10 @@ class MainActivity : ComponentActivity() {
             SirtriviaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                    TriviaHome(
-                          modifier = Modifier.padding(innerPadding)
+                          modifier = Modifier.padding(innerPadding),
                    )
                 }
+//                ExampleScreen()
             }
         }
     }

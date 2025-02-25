@@ -45,7 +45,6 @@ android {
 
 dependencies {
     kapt (libs.hilt.compiler)
-    // KSP
     implementation (libs.dagger.hilt.android)
 
     // Kotlin Coroutines
@@ -53,10 +52,7 @@ dependencies {
     implementation (libs.kotlinx.coroutines.android)
 
     // Lifecycle and ViewModel
-    implementation (libs.androidx.lifecycle.viewmodel.ktx)
-    implementation (libs.androidx.lifecycle.runtime.ktx.v262)
-    implementation (libs.androidx.lifecycle.livedata.ktx)
-
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     // Room (Optional)
     implementation (libs.androidx.room.ktx)
 
