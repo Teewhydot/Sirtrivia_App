@@ -56,10 +56,9 @@ fun beveledCornersShape(
 
 @Composable
 fun TriviaButton(buttonText: String,
-                 index: Int,
                  onTap: () -> Unit,
                  buttonColor: Color,
-                 answer:String,) {
+                 ) {
     Surface(modifier = Modifier.height(90.dp).fillMaxWidth(
     ).padding(20.dp).clickable {
         onTap()

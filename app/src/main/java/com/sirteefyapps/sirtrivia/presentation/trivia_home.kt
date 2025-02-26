@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,20 +31,24 @@ import com.sirteefyapps.sirtrivia.presentation.widgets.TriviaButton
 import com.sirteefyapps.sirtrivia.presentation.widgets.TriviaNavigateButton
 import com.sirteefyapps.sirtrivia.ui.theme.Typography
 import com.sirteefyapps.sirtrivia.utils.AppColors
+import com.sirteefyapps.sirtrivia.utils.SharedPreferencesHelper
 
 @Preview
 
 @Composable
 fun TriviaHome(modifier: Modifier = Modifier,viewModel: QuestionsViewModel = viewModel()) {
+    val context = LocalContext.current
+    val sharedPreferencesHelper = remember { SharedPreferencesHelper(context) }
+    sharedPreferencesHelper.getUserProgress("userProgress")?.let {
+        viewModel.currentQuestionIndex.intValue = (it["currentQuestionIndex"] as? Number)?.toInt() ?: 0
+        viewModel.currentScore.intValue = (it["currentScore"] as? Number)?.toInt() ?: 0
+    }
 val questions  = viewModel.questionList
-    val currentQuestionIndex = viewModel.currentQuestionIndex.intValue
-
     Surface(modifier = Modifier.fillMaxSize(), color = AppColors.darkPurple) {
         Column(modifier = Modifier.padding(20.dp)) {
             questions.value.data?.let {
                 QuestionsTracker(
-                    total = it.size,
-                    count = currentQuestionIndex + 1
+                  viewModel = viewModel
                 )
             }
             Spacer(
@@ -68,6 +73,15 @@ fun QuestionAndChoices(viewModel: QuestionsViewModel = viewModel()) {
 
     // State to track the color of each button by its index
     val buttonColors = remember { mutableStateMapOf<Int, Color>() }
+
+    val context = LocalContext.current
+    val sharedPreferencesHelper = remember { SharedPreferencesHelper(context) }
+    // State to hold the Map data
+    val userMap = mapOf(
+        "currentQuestionIndex" to viewModel.currentQuestionIndex.intValue,
+        "currentScore" to viewModel.currentScore.intValue
+    )
+    var savedMap by remember { mutableStateOf<Map<String, Any>?>(null) }
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -102,10 +116,12 @@ fun QuestionAndChoices(viewModel: QuestionsViewModel = viewModel()) {
                             val isCorrect = question.choices[i - 1] == question.answer
                             buttonColors[i - 1] = if (isCorrect) Color.Green else Color.Red
                             isButtonTapped = true
+                            if(isCorrect){
+                                viewModel.currentScore.intValue += 1
+                                sharedPreferencesHelper.saveUserProgress("userProgress", userMap)
+                            }
                         },
-                        index = i - 1,
-                        buttonColor = buttonColors[i - 1] ?: AppColors.brown,
-                        answer = question.answer,
+                        buttonColor = buttonColors[i - 1] ?: AppColors.lightPurple,
                     )
                 }
             }
@@ -117,7 +133,6 @@ fun QuestionAndChoices(viewModel: QuestionsViewModel = viewModel()) {
                 buttonText = "Next",
                 onTap = {
                     buttonColors.clear()
-
                     viewModel.moveToNextQuestion()
                     isButtonTapped = false
                     buttonColors.clear() // Reset button states for the next question
