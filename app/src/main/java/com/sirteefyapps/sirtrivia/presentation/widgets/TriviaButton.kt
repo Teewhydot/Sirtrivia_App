@@ -1,15 +1,23 @@
 package com.sirteefyapps.sirtrivia.presentation.widgets
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
@@ -24,6 +32,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sirteefyapps.sirtrivia.ui.theme.Typography
+import kotlinx.coroutines.delay
 
 fun beveledCornersShape(
     cornerSize: Dp = 10.dp, // Adjust the bevel size here
@@ -58,11 +67,26 @@ fun beveledCornersShape(
 fun TriviaButton(buttonText: String,
                  onTap: () -> Unit,
                  buttonColor: Color,
+                 animate: Boolean = false, // Flag to control animation
+                 delay: Int = 0 // Delay before starting the animation
                  ) {
+    var startAnimation by remember { mutableStateOf(false) }
+    LaunchedEffect(animate) {
+        if (animate) {
+            delay(delay.toLong()) // Wait for the specified delay
+            startAnimation = true
+        }
+    }
+    val verticalOffset by animateDpAsState(
+        targetValue = if (startAnimation) 0.dp else 1000.dp, // Start from 1000.dp (bottom) and animate to 0.dp
+        animationSpec = tween(durationMillis = 500) // 0.5-second animation
+    )
+
     Surface(modifier = Modifier.height(90.dp).fillMaxWidth(
     ).padding(20.dp).clickable {
         onTap()
-    }, shape = beveledCornersShape(
+    }.offset(y = verticalOffset) // Apply the animated offset
+        , shape = beveledCornersShape(
         cornerSize = 10.dp
     ), color = buttonColor) {
         Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {

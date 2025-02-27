@@ -9,9 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,13 +24,12 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sirteefyapps.sirtrivia.presentation.vm.QuestionsViewModel
 import com.sirteefyapps.sirtrivia.presentation.widgets.DottedDivider
+import com.sirteefyapps.sirtrivia.presentation.widgets.QuestionText
 import com.sirteefyapps.sirtrivia.presentation.widgets.TriviaButton
 import com.sirteefyapps.sirtrivia.presentation.widgets.TriviaNavigateButton
-import com.sirteefyapps.sirtrivia.ui.theme.Typography
 import com.sirteefyapps.sirtrivia.utils.AppColors
 import com.sirteefyapps.sirtrivia.utils.SharedPreferencesHelper
 
@@ -78,11 +78,16 @@ fun QuestionAndChoices(viewModel: QuestionsViewModel = viewModel()) {
     val sharedPreferencesHelper = remember { SharedPreferencesHelper(context) }
     // State to hold the Map data
     val userMap = mapOf(
-        "currentQuestionIndex" to viewModel.currentQuestionIndex.intValue,
+        "currentQuestionIndex" to currentQuestionIndex,
         "currentScore" to viewModel.currentScore.intValue
     )
-    var savedMap by remember { mutableStateOf<Map<String, Any>?>(null) }
+    var shouldButtonAnimate by remember { mutableStateOf(false) } // State to control button animation
+    var shouldTextAnimate by remember { mutableStateOf(false) } // State to control text animation
 
+    LaunchedEffect(viewModel.currentQuestionIndex.intValue) {
+        shouldButtonAnimate = true
+        shouldTextAnimate = true
+        }
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -96,33 +101,35 @@ fun QuestionAndChoices(viewModel: QuestionsViewModel = viewModel()) {
             ) {
                 // Display questions here
                 if (question != null) {
-                    Text(
-                        text = question.question,
-                        style = Typography.displayMedium.copy(
-                            fontSize = 15.sp,
-                            color = AppColors.white
-                        )
-                    )
+                key (viewModel.currentQuestionIndex.intValue){
+                    QuestionText(question, shouldTextAnimate)
+                }
                 }
             }
-
             if (question != null) {
                 for (i in 1..question.choices.size) {
+                    val delay = (i - 1) * 200 // 200ms delay between each button
                     // Display options here
-                    TriviaButton(
-                        buttonText = question.choices[i - 1],
-                        onTap = {
-                            // Update the button color based on the answer
-                            val isCorrect = question.choices[i - 1] == question.answer
-                            buttonColors[i - 1] = if (isCorrect) Color.Green else Color.Red
-                            isButtonTapped = true
-                            if(isCorrect){
-                                viewModel.currentScore.intValue += 1
-                                sharedPreferencesHelper.saveUserProgress("userProgress", userMap)
-                            }
-                        },
-                        buttonColor = buttonColors[i - 1] ?: AppColors.lightPurple,
-                    )
+                   key(viewModel.currentQuestionIndex.intValue){
+                       TriviaButton(
+                           buttonText = question.choices[i - 1],
+                           delay = delay,
+                           animate = shouldButtonAnimate,
+                           onTap = {
+                               // Update the button color based on the answer
+                               val isCorrect = question.choices[i - 1] == question.answer
+                               buttonColors[i - 1] = if (isCorrect) Color.Green else Color.Red
+                               isButtonTapped = true
+                               shouldButtonAnimate = false
+                               shouldTextAnimate = true
+                               if(isCorrect){
+                                   viewModel.currentScore.intValue += 1
+                                   sharedPreferencesHelper.saveUserProgress("userProgress", userMap)
+                               }
+                           },
+                           buttonColor = buttonColors[i - 1] ?: AppColors.lightPurple,
+                       )
+                   }
                 }
             }
         }
