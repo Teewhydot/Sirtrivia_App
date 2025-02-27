@@ -36,4 +36,8 @@ class QuestionsViewModel  @Inject constructor(private  val repository: QuestionR
             currentQuestionIndex.intValue =
                 (currentQuestionIndex.intValue + 1) % (_questionList.value.data?.size ?: 1)
         }
+    fun resetQuiz() {
+        currentQuestionIndex.intValue = 0
+        currentScore.intValue = 0
+    }
     }

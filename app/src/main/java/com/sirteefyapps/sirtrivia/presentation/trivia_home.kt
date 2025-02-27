@@ -2,6 +2,7 @@ package com.sirteefyapps.sirtrivia.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -136,16 +137,28 @@ fun QuestionAndChoices(viewModel: QuestionsViewModel = viewModel()) {
 
         // Next button (conditionally displayed)
         if (isButtonTapped) {
-            TriviaNavigateButton(
-                buttonText = "Next",
-                onTap = {
-                    buttonColors.clear()
-                    viewModel.moveToNextQuestion()
-                    isButtonTapped = false
-                    buttonColors.clear() // Reset button states for the next question
-                },
-                buttonColor = AppColors.lightBlue,
-            )
+           Row {
+               TriviaNavigateButton(
+                   buttonText = "Next",
+                   onTap = {
+                       buttonColors.clear()
+                       viewModel.moveToNextQuestion()
+                       isButtonTapped = false
+                       buttonColors.clear() // Reset button states for the next question
+                   },
+                   buttonColor = AppColors.lightBlue,
+               )
+               TriviaNavigateButton(
+                   buttonText = "Reset Quiz",
+                   onTap = {
+                       buttonColors.clear()
+                       viewModel.resetQuiz()
+                       isButtonTapped = false
+                       buttonColors.clear() // Reset button states for the next question
+                   },
+                   buttonColor = AppColors.brown,
+               )
+           }
         }
     }
 }
