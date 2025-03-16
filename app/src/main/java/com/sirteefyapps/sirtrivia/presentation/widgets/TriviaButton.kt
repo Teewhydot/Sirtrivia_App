@@ -82,8 +82,8 @@ fun TriviaButton(buttonText: String,
         animationSpec = tween(durationMillis = 500) // 0.5-second animation
     )
 
-    Surface(modifier = Modifier.height(90.dp).fillMaxWidth(
-    ).padding(20.dp).clickable {
+    Surface(modifier = Modifier.height(60.dp).fillMaxWidth(
+    ).padding(10.dp).clickable {
         onTap()
     }.offset(y = verticalOffset) // Apply the animated offset
         , shape = beveledCornersShape(

@@ -3,6 +3,7 @@ package com.sirteefyapps.sirtrivia.presentation.widgets
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,10 +42,12 @@ fun QuestionText(
         color = AppColors.darkPurple
     ) {
         Text(
+            modifier = Modifier.padding(10.dp),
             text = question.question,
             style = Typography.displayMedium.copy(
                 fontSize = 15.sp,
-                color = AppColors.white
+                color = AppColors.white,
+                lineHeight = 18.sp
             )
         )
     }

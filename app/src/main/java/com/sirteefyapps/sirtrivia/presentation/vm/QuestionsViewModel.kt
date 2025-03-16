@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class QuestionsViewModel  @Inject constructor(private  val repository: QuestionRepo) : ViewModel() {
+class QuestionsViewModel @Inject constructor(private val repository: QuestionRepo) : ViewModel() {
 
     private val _questionList: MutableState<DataOrException<Questions, Boolean, Exception>> =
         mutableStateOf(
@@ -23,6 +23,7 @@ class QuestionsViewModel  @Inject constructor(private  val repository: QuestionR
     var currentQuestionIndex = mutableIntStateOf(0)
     var currentScore = mutableIntStateOf(0)
         private set
+
     init {
         getWorldQuestions()
     }
@@ -32,12 +33,14 @@ class QuestionsViewModel  @Inject constructor(private  val repository: QuestionR
             _questionList.value = repository.getWorldQuestions()
         }
     }
-        fun moveToNextQuestion() {
-            currentQuestionIndex.intValue =
-                (currentQuestionIndex.intValue + 1) % (_questionList.value.data?.size ?: 1)
-        }
+
+    fun moveToNextQuestion() {
+        currentQuestionIndex.intValue =
+            (currentQuestionIndex.intValue + 1) % (_questionList.value.data?.size ?: 1)
+    }
+
     fun resetQuiz() {
         currentQuestionIndex.intValue = 0
         currentScore.intValue = 0
     }
-    }
+}

@@ -4,11 +4,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,7 +49,7 @@ fun TriviaHome(modifier: Modifier = Modifier,viewModel: QuestionsViewModel = vie
     }
 val questions  = viewModel.questionList
     Surface(modifier = Modifier.fillMaxSize(), color = AppColors.darkPurple) {
-        Column(modifier = Modifier.padding(20.dp)) {
+        Column(modifier = Modifier.padding(20.dp).windowInsetsPadding(WindowInsets.safeContent)) {
             questions.value.data?.let {
                 QuestionsTracker(
                   viewModel = viewModel
@@ -97,7 +100,7 @@ fun QuestionAndChoices(viewModel: QuestionsViewModel = viewModel()) {
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(fraction = 0.4f),
+                    .fillMaxHeight(fraction = 0.3f),
                 color = AppColors.darkPurple
             ) {
                 // Display questions here
